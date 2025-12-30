@@ -1,14 +1,20 @@
-import { FaGamepad, FaCrown, FaShieldAlt, FaFire, FaStar, FaChartLine, FaTrophy } from "react-icons/fa";
-import { Stats } from "../types";
+import { FaGamepad, FaCrown, FaShieldAlt, FaFire, FaStar, FaChartLine, FaTrophy, FaCalendarAlt } from "react-icons/fa";
+import { Stats, GameWithYear } from "../types";
 import { COLORS } from "../utils/constants";
 
 interface StatsOverviewProps {
   stats: Stats;
   yearStats: Array<{ year: number; count: number; avgRating: number; winners: number }>;
   genreStats: Array<{ name: string; value: number }>;
+  featuredGames?: GameWithYear[];
 }
 
-export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, yearStats, genreStats }) => {
+export const StatsOverview: React.FC<StatsOverviewProps> = ({ 
+  stats, 
+  yearStats, 
+  genreStats,
+  featuredGames = [] 
+}) => {
   return (
     <div className="space-y-8 mb-8">
       {/* Cards de estadísticas principales */}
@@ -119,10 +125,10 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, yearStats, 
         </div>
       </div>
 
-      {/* Gráficos de distribución */}
+      {/* Gráficos de distribución - 2 columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Géneros Principales */}
-        <div className="bg-gradient-to-br from-gray-900/95 to-gray-950/95 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-2xl hover:shadow-purple-500/10 transition-all duration-500">
+        <div className="bg-gradient-to-br from-gray-900/95 to-gray-950/95 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 animate-slide-up">
           <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
             <div className="p-2 bg-purple-500/20 rounded-xl">
               <FaChartLine className="text-purple-400 text-xl" />
@@ -160,6 +166,59 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, yearStats, 
                     >
                       {/* Efecto shimmer */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Distribución por Año - SIN GOTY */}
+        <div className="bg-gradient-to-br from-gray-900/95 to-gray-950/95 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 animate-slide-up">
+          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <div className="p-2 bg-blue-500/20 rounded-xl">
+              <FaCalendarAlt className="text-blue-400 text-xl" />
+            </div>
+            Distribución por Año
+          </h3>
+          <div className="space-y-6">
+            {yearStats.slice(-5).reverse().map((yearStat, index) => {
+              const maxCount = Math.max(...yearStats.map(y => y.count));
+              const percentage = (yearStat.count / maxCount) * 100;
+              
+              return (
+                <div key={yearStat.year} className="group">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-600/20 to-blue-700/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-blue-300 font-bold text-lg">{yearStat.year}</span>
+                      </div>
+                      <div>
+                        <span className="text-white font-semibold block">{yearStat.count} juegos</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center gap-1 mb-1">
+                        <FaStar className="text-yellow-400 text-sm" />
+                        <span className="text-white font-bold">{yearStat.avgRating.toFixed(1)}</span>
+                      </div>
+                      <span className="text-gray-400 text-sm">Rating promedio</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-3">
+                    <div className="flex justify-between text-xs text-gray-400 mb-1">
+                      <span>Progreso</span>
+                      <span>{Math.round(percentage)}%</span>
+                    </div>
+                    <div className="relative w-full bg-gray-800/50 rounded-full h-2.5 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 rounded-full transition-all duration-1000"
+                        style={{ width: `${percentage}%` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                      </div>
                     </div>
                   </div>
                 </div>

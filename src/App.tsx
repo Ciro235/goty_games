@@ -32,6 +32,7 @@ const App: React.FC = () => {
   const yearStats = getYearStats(games);
   const genreStats = getGenreStats(games);
 
+
   if (loading) return <LoadingScreen />;
 
   return (
@@ -124,7 +125,7 @@ const App: React.FC = () => {
         className="fixed bottom-6 right-6 z-40 group"
         aria-label="Recargar juegos"
       >
-        <div className="relative">
+        <div className="hidden">
           {/* Efecto de pulso */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur-md opacity-70 animate-ping"></div>
           {/* Botón principal */}
